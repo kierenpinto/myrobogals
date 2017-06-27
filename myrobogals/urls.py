@@ -126,7 +126,11 @@ urlpatterns = [
 	url(r'^i18n/', include(i18n)),
 	# TinyMCE helpers
 	url(r'^tinymce/', include(tinymce_urls)),
-	
+
+	# New Support Module (rgSupport)
+	#Beta
+	url(r'^support2/',include('myrobogals.rgsupport.urls', namespace='rgsupport')),
+
 	# Admin site
 	url(r'^topsecretarea/', include(admin.site.urls)),
 ]
