@@ -3,4 +3,9 @@
 <div>
     <h1>Thank you for your query. We will get back to you ASAP!</h1>
 </div>
+{% for email in emails %}
+{{email.name}}
+{{email.email}}
+{% endfor %}
+{{ obj.name }}
 {% endblock %}

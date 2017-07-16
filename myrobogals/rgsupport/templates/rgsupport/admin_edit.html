@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <p><a href = "{% url 'rgsupport:admin_view' query.id %}">Back</a>
+        <a href = "{% url 'rgsupport:admin_list' %}">Admin Home</a></p>
+
+    <h3>Editing Request {{query.id}}</h3>
+    <form action = "{% url 'rgsupport:admin_edit' query.id %}" method="post">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+    <input type = submit value = "Submit">
+    </form>
+</div>
+{% endblock %}

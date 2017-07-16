@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <p><a href="{% url 'rgsupport:admin_list' %} ">Back</a></p>
+    <h3><a href = " {% url 'rgsupport:admin_edit' request.pk%}">Edit</a></h3>
+    <div>
+        <p>Query Number: {{request.pk}}</p>
+        <p>Name: {{request.name}}</p>
+        <p>Email: {{request.email}}</p>
+        <p>Date: {{request.date}}</p>
+        <p>Chapter: {{request.chapter}}</p>
+        <p>Message:</p>:
+        <p>{{request.message}}</p>
+        {% if request.resolved == False %}
+        <p><a href = "{%url 'rgsupport:admin_resolve' request.pk %}">Resolve Request</a></p>
+        {% else %}
+        <p>Issue Resolved</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

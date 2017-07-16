@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h3>Query Control</h3>
+    <table>
+        <tr>
+            <th>Query No.</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Resolved</th>
+        </tr>
+        {% for query in object_list %}
+        <tr>
+            <td><a href="{% url 'rgsupport:admin_view' query.pk %}">{{query.pk}}</a></td>
+        <td>{{query.name}}</td>
+        <td>{{query.date}}</td>
+            <td>{{query.resolved}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}
