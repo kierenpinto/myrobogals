@@ -36,6 +36,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=100)),
                 ('message', models.TextField(max_length=100)),
                 ('date', models.DateTimeField(default=django.utils.timezone.now)),
+                ('date_resolved', models.DateTimeField(null=True)),
                 ('resolved', models.BooleanField(default=False)),
                 ('chapter', models.ForeignKey(to='rgchapter.Chapter')),
                 ('enquiry_type', models.ForeignKey(to='rgsupport.Department')),

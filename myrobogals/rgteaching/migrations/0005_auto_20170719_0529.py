@@ -2,19 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import django.utils.timezone
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rgsupport', '0009_auto_20170627_0539'),
+        ('rgteaching', '0004_auto_20170512_2126'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='request',
-            name='date',
-            field=models.DateTimeField(default=django.utils.timezone.now),
+            model_name='schoolvisit',
+            name='created_method',
+            field=models.IntegerField(default=0, choices=[(0, b'Event'), (1, b'QuickEntry'), (2, b'Import')]),
         ),
     ]
