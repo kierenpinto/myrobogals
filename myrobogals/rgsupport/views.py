@@ -5,14 +5,15 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView
 from .models import Request, Department, Department_Emails
-from .forms import RequestForm, RequestForm_Edit
+from .forms import RequestForm, RequestForm_Edit, Issue_List_Filter
 from django.shortcuts import get_object_or_404, redirect
 from myrobogals.rgmessages.models import EmailMessage, EmailRecipient
 from myrobogals.rgchapter.models import Chapter
 from myrobogals.rgprofile.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-#Dependant Email Function
+
+#### Send Email Function - Called by 'get_requestform' view/function. Takes in a request object, and Primary Key of the generated request.
 def email_message(http_request_obj,request_pk):
     '''
     if(obj.send_to_chapters):
@@ -59,7 +60,7 @@ def email_message(http_request_obj,request_pk):
 
 #      SEND MESSAGE FUNCTION
 
-
+##### Allows request to be submitted - PUBLIC
 def get_requestform(request):
     if request.method == 'POST':
         form = RequestForm(request.POST)
@@ -68,7 +69,6 @@ def get_requestform(request):
             reqform.date = timezone.now()
             reqform.resolved = False
             reqform.save()
-            print reqform.pk
             email_message(request, reqform.pk)
             return redirect('rgsupport:thanks')
     else:
@@ -76,6 +76,7 @@ def get_requestform(request):
 
     return render(request, 'rgsupport/support_form.html', {'form':form})
 
+#### Allows A request to be edited - ADMIN
 @login_required
 def get_editform(request, pk):
     if (request.user.is_superuser):
@@ -93,6 +94,8 @@ def get_editform(request, pk):
         return render(request, 'rgsupport/admin_edit.html', {'form': form, 'query':query})
     else:
         return render(request, 'rgsupport/admin_reject.html')
+
+#### Sets a particular request to resolved. - ADMIN
 @login_required
 def set_resolved(request, pk):
     if (request.user.is_superuser):
@@ -103,12 +106,16 @@ def set_resolved(request, pk):
     else:
         return render(request, 'rgsupport/admin_reject.html')
 
+##### Shows a thank-you page after a request has been submitted - PUBLIC
 def get_thanks(request):
     return render(request,'rgsupport/thanks.html')
 
+
+##### Shows a list of all requests - ADMIN
 class IssuesList(ListView):
-    model = Request
+    #queryset = Request.objects.all().order_by('-pk').filter(resolved__exact=False)
     template_name = 'rgsupport/admin.html'
+    filter_list = None
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(IssuesList, self).dispatch(*args, **kwargs)
@@ -116,9 +123,36 @@ class IssuesList(ListView):
     @method_decorator(login_required)
     def get(self, *args, **kwargs):
         if (self.request.user.is_superuser):
+            issue_form = Issue_List_Filter(self.request.GET)
+            if issue_form.is_valid():
+                form_filters = issue_form.cleaned_data
+                self.filter_list = form_filters
             return super(IssuesList, self).get(*args, **kwargs)
         else:
             return render(self.request,'rgsupport/admin_reject.html')
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(IssuesList, self).get_context_data(**kwargs)
+        context['Filter_List'] = Issue_List_Filter(self.request.GET)
+        return context
+
+    def get_queryset(self):
+        query = Request.objects.all().order_by('-pk')
+
+        if 'unresolved' in self.filter_list['filters']:
+            query = query.filter(resolved__exact=False)
+        if 'resolved' in self.filter_list['filters']:
+            query = query.filter(resolved__exact=True)
+        if 'Ascending' in self.filter_list['date_order']:
+            query = query.order_by('date')
+        if 'Descending' in self.filter_list['date_order']:
+            query = query.order_by('-date')
+        if self.filter_list['enquiry_type']:
+            print self.filter_list['enquiry_type']
+            query = query.filter(enquiry_type__exact=Department.objects.get(name = self.filter_list['enquiry_type']).pk)
+        return query
+##### Shows the details of a particular support request - ADMIN
 
 class IssueDetail(DetailView):
     model = Request
@@ -134,3 +168,12 @@ class IssueDetail(DetailView):
             return super(IssueDetail, self).get(*args, **kwargs)
         else:
             return render(self.request,'rgsupport/admin_reject.html')
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(IssueDetail, self).get_context_data(**kwargs)
+        return context
+###### Support Homepage - PUBLIC
+def get_homeview(request):
+    superuser = request.user.is_superuser
+    return render(request, 'rgsupport/home.html',{'superuser':superuser})

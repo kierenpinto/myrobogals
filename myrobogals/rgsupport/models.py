@@ -18,11 +18,13 @@ class Request(models.Model):
     chapter = models.ForeignKey(Chapter,on_delete=models.CASCADE)# Add validation for Correct Chapter Options
     message = models.TextField(max_length=100)
     date = models.DateTimeField(default=timezone.now)
+    date_resolved = models.DateTimeField(null=True)
     resolved = models.BooleanField(default=False)
     def __str__(self):
         return self.name
     def resolve_enquiry(self):
         self.resolved = True
+        self.date_resolved = timezone.now()
 
 class Department(models.Model):
     name = models.CharField(max_length=100)

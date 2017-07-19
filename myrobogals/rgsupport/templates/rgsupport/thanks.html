@@ -2,10 +2,6 @@
 {% block content %}
 <div>
     <h1>Thank you for your query. We will get back to you ASAP!</h1>
+    <a href = "{% url 'rgsupport:home' %}">Back to Support Home</a>
 </div>
-{% for email in emails %}
-{{email.name}}
-{{email.email}}
-{% endfor %}
-{{ obj.name }}
 {% endblock %}

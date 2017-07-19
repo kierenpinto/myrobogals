@@ -1,13 +1,16 @@
 {% extends "base.html" %}
+{% load i18n %}
+{% block title %}Support Request Details{% endblock %}
+{% block pagetitle %}Support Request Details...{% endblock %}
 {% block content %}
 <div>
     <p><a href="{% url 'rgsupport:admin_list' %} ">Back</a></p>
-    <h3><a href = " {% url 'rgsupport:admin_edit' request.pk%}">Edit</a></h3>
+    <p><a href = " {% url 'rgsupport:admin_edit' request.pk%}">Edit</a></p>
     <div>
         <p>Query Number: {{request.pk}}</p>
         <p>Name: {{request.name}}</p>
         <p>Email: {{request.email}}</p>
-        <p>Date: {{request.date}}</p>
+        <p>Request Timestamp: {{request.date}}</p>
         <p>Chapter: {{request.chapter}}</p>
         <p>Message:</p>:
         <p>{{request.message}}</p>
@@ -15,6 +18,9 @@
         <p><a href = "{%url 'rgsupport:admin_resolve' request.pk %}">Resolve Request</a></p>
         {% else %}
         <p>Issue Resolved</p>
+        {% endif %}
+        {% if request.resolved == True %}
+        <p>Resolve Timestamp: {{request.date_resolved}}</p>
         {% endif %}
     </div>
 </div>

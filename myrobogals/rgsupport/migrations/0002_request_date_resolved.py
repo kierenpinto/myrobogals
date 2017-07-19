@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rgsupport', '0004_department_send_to_chapters'),
+        ('rgsupport', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='request',
-            name='resolved',
-            field=models.BooleanField(default=False),
+            name='date_resolved',
+            field=models.DateTimeField(null=True),
         ),
     ]

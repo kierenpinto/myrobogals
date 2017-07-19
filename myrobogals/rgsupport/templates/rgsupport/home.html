@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Robogals Support - HOME{% endblock %}
+{% block pagetitle %}Robogals Support - HOME{% endblock %}
+{% block content %}
+<style>
+    .btn-link {
+        padding: 5px;
+        margin: 10px;
+        border: 1px solid #d1bb9a;
+        background: #ffe8be;
+    }
+    .btn-link:hover {
+        padding: 5px;
+        margin: 10px;
+        border: 1px solid #d1bb9a;
+        background: #d1bb9a;
+    }
+</style>
+<div>
+    <p>
+        <a class = " btn-link " href="{% url 'rgsupport:query' %} ">New Request</a>
+        {% if superuser %}
+
+        <a class = " btn-link " href="{% url 'rgsupport:admin_list' %}">Support Administration</a>
+
+        {% endif %}
+
+    <table>
+    {{ form.as_table }}
+    </table>
+</div>
+{% endblock %}

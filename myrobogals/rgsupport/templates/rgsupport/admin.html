@@ -1,20 +1,39 @@
 {% extends "base.html" %}
+{% block title %}Robogals Support - Administration{% endblock %}
+{% block pagetitle %}Robogals Support - Administration{% endblock %}
 {% block content %}
 <div>
-    <h3>Query Control</h3>
+    <a href = "{% url 'rgsupport:home' %}">Back</a>
+    <div>
+        <form href="{% url 'rgsupport:admin_list' %}" method="GET">
+            {% csrf_token %}
+            {{ Filter_List.as_table }}
+            <input type = submit value = "Filter"/>
+        </form>
+    </div>
     <table>
         <tr>
-            <th>Query No.</th>
+            <th>Request No.</th>
             <th>Name</th>
             <th>Date</th>
+            <th>Enquiry Type</th>
+            <th>Request Details</th>
             <th>Resolved</th>
         </tr>
         {% for query in object_list %}
         <tr>
-            <td><a href="{% url 'rgsupport:admin_view' query.pk %}">{{query.pk}}</a></td>
-        <td>{{query.name}}</td>
-        <td>{{query.date}}</td>
-            <td>{{query.resolved}}</td>
+            <td>{{query.pk}}</td>
+            <td>{{query.name}}</td>
+            <td>{{query.date}}</td>
+            <td>{{query.enquiry_type}}</td>
+            <td><a href="{% url 'rgsupport:admin_view' query.pk %}">More</a></td>
+            <td>
+                {% if query.resolved == False %}
+                <a href = "{%url 'rgsupport:admin_resolve' query.pk %}">Resolve</a>
+                {% else %}
+                Resolved
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>

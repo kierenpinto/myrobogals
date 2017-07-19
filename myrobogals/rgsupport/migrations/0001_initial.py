@@ -2,11 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('rgchapter', '0004_auto_20170406_2245'),
     ]
 
     operations = [
@@ -15,6 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
+                ('send_to_chapters', models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
@@ -31,8 +34,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
                 ('email', models.EmailField(max_length=100)),
-                ('chapter', models.CharField(max_length=100)),
                 ('message', models.TextField(max_length=100)),
+                ('date', models.DateTimeField(default=django.utils.timezone.now)),
+                ('resolved', models.BooleanField(default=False)),
+                ('chapter', models.ForeignKey(to='rgchapter.Chapter')),
                 ('enquiry_type', models.ForeignKey(to='rgsupport.Department')),
             ],
         ),
