@@ -2,16 +2,53 @@
 {% block title %}Robogals Support - Administration{% endblock %}
 {% block pagetitle %}Robogals Support - Administration{% endblock %}
 {% block content %}
+<!-- Scripts and CSS-->
+    <script>
+          function Filter_Toggle() {
+            var x = document.getElementById('filter_form');
+            if (x.style.display === 'none') {
+                x.style.display = 'block';
+            } else {
+                x.style.display = 'none';
+            }
+        }
+        // document.getElementById('filter_form').style.visibility = 'visible';
+    </script>
+    <style>
+        #toggle_div {
+        text-align: center;
+        }
+        #request_table {
+            border: 3px solid #1366A3;
+        }
+        #request_table th{
+        border : 2px solid black;
+        padding :10px;
+        }
+        #request_table td{
+        border : 1px solid black;
+        padding :5px;
+        }
+        .admin_action_button {
+        text-align:center;
+        }
+    </style>
 <div>
     <a href = "{% url 'rgsupport:home' %}">Back</a>
-    <div>
+    <div id="toggle_div">
+    <button id='filter_toggle' onclick="Filter_Toggle()">Filter</button>
+    </div>
+
+    <div id = 'filter_form' style='display: none;'>
         <form href="{% url 'rgsupport:admin_list' %}" method="GET">
             {% csrf_token %}
-            {{ Filter_List.as_table }}
-            <input type = submit value = "Filter"/>
+            <table>
+                {{ Filter_List.as_table}}
+            </table>
+            <input type = submit value = "Go"/>
         </form>
     </div>
-    <table>
+    <table id = 'request_table'>
         <tr>
             <th>Request No.</th>
             <th>Name</th>
@@ -26,8 +63,8 @@
             <td>{{query.name}}</td>
             <td>{{query.date}}</td>
             <td>{{query.enquiry_type}}</td>
-            <td><a href="{% url 'rgsupport:admin_view' query.pk %}">More</a></td>
-            <td>
+            <td class = "admin_action_button"><a href="{% url 'rgsupport:admin_view' query.pk %}">More</a></td>
+            <td class = "admin_action_button">
                 {% if query.resolved == False %}
                 <a href = "{%url 'rgsupport:admin_resolve' query.pk %}">Resolve</a>
                 {% else %}

@@ -139,15 +139,16 @@ class IssuesList(ListView):
 
     def get_queryset(self):
         query = Request.objects.all().order_by('-pk')
-
-        if 'unresolved' in self.filter_list['filters']:
-            query = query.filter(resolved__exact=False)
-        if 'resolved' in self.filter_list['filters']:
-            query = query.filter(resolved__exact=True)
-        if 'Ascending' in self.filter_list['date_order']:
-            query = query.order_by('date')
-        if 'Descending' in self.filter_list['date_order']:
-            query = query.order_by('-date')
+        print self.filter_list['enquiry_status']
+        if 'resolved' in list(self.filter_list['enquiry_status']):
+            query = query.filter(resolved=True)
+        if 'unresolved' in list(self.filter_list['enquiry_status']):
+            query = query.filter(resolved=False)
+        if self.filter_list['date_order']:
+            if 'Ascending' in self.filter_list['date_order']:
+                query = query.order_by('date')
+            if 'Descending' in self.filter_list['date_order']:
+                query = query.order_by('-date')
         if self.filter_list['enquiry_type']:
             print self.filter_list['enquiry_type']
             query = query.filter(enquiry_type__exact=Department.objects.get(name = self.filter_list['enquiry_type']).pk)

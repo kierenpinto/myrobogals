@@ -3,19 +3,35 @@
 {% block title %}Support Request Details{% endblock %}
 {% block pagetitle %}Support Request Details...{% endblock %}
 {% block content %}
+<style>
+    #request_detail p{
+        border: 1px dotted black;
+        padding: 3px;
+    }
+    #request_detail{
+    border: 2px solid black;
+    }
+    #resolve_issue{
+        text-align:center;
+    }
+    #resolve_issue a{
+    font-size:14pt;
+
+    }
+</style>
 <div>
     <p><a href="{% url 'rgsupport:admin_list' %} ">Back</a></p>
     <p><a href = " {% url 'rgsupport:admin_edit' request.pk%}">Edit</a></p>
-    <div>
+    <div id = 'request_detail'>
         <p>Query Number: {{request.pk}}</p>
         <p>Name: {{request.name}}</p>
         <p>Email: {{request.email}}</p>
         <p>Request Timestamp: {{request.date}}</p>
         <p>Chapter: {{request.chapter}}</p>
-        <p>Message:</p>:
+        <p>Message:</p>
         <p>{{request.message}}</p>
         {% if request.resolved == False %}
-        <p><a href = "{%url 'rgsupport:admin_resolve' request.pk %}">Resolve Request</a></p>
+        <p id = 'resolve_issue'><a href = "{%url 'rgsupport:admin_resolve' request.pk %}">Resolve Request</a></p>
         {% else %}
         <p>Issue Resolved</p>
         {% endif %}
